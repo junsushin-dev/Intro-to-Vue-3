@@ -20,8 +20,8 @@ app.component('product-display', {
         <!-- <p v-if="inStock">In Stock</p> -->
         <!-- <p v-else>Out of Stock</p> -->
         <!-- <p v-show="inStock">In Stock</p> -->
-        <p v-if="inventory > 10">In Stock</p>
-        <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out</p>
+        <p v-if="inStock > 10">In Stock</p>
+        <p v-else-if="inStock <= 10 && inStock > 0">Almost sold out</p>
         <p v-else>Out of Stock</p>
         <product-details :details="details" ></product-details>
         <div 
@@ -40,7 +40,7 @@ app.component('product-display', {
           @click="addToCart">
           Add to Cart
         </button>
-        <button class="button" @click="decrementFromCart">-1</button>
+        <button class="button" @click="removeFromCart">Remove</button>
       </div>
       <a :href="url">buy it here!</a>
     </div>
@@ -50,12 +50,11 @@ app.component('product-display', {
       product: 'Socks',
       description: 'Beautiful Socks on Sale!',
       url: 'https://naver.com',
-      inventory: 5,
       onSale: true,
       details: ['50% cotton', '30% wool', '20% polyester'],
       variants: [
         { id: 2234, color: 'green', image: './assets/images/socks_green.jpg', quantity: 50 },
-        { id: 2235, color: 'blue', image: './assets/images/socks_blue.jpg', quantity: 0 }
+        { id: 2235, color: 'blue', image: './assets/images/socks_blue.jpg', quantity: 5 }
       ],
       sizes: ['small', 'medium', 'large'],
       brand: 'Vue Mastery',
@@ -64,13 +63,13 @@ app.component('product-display', {
   },
   methods: {
     addToCart() {
-      this.cart += 1
+      this.$emit('add-to-cart', this.variants[this.selectedVariant].id)
     },
     updateVariant(index) {
       this.selectedVariant = index
     },
-    decrementFromCart() {
-      this.cart -= 1
+    removeFromCart() {
+      this.$emit('remove-from-cart', this.variants[this.selectedVariant].id)
     }
   },
   computed: {
@@ -88,6 +87,6 @@ app.component('product-display', {
         return 'free'
       }
       return 2.99
-    }
+    },
   }
 })
